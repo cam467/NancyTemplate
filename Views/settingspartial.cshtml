@@ -1,0 +1,129 @@
+@foreach(var s in Model.settings)
+{
+    <div class="row-fluid" data-controlkey="@s.id">
+        <div class="span12 ">
+            <div class="control-group">
+                <label class="control-label" >
+                    @s.name
+                    @if (Model.configview>=0)
+                    {
+                        <div class="configbuttons smaller">
+                            <i class="fa fa-minus" data-controlkey="@s.id"></i>
+                            <i class="fa fa-pencil" data-controlkey="@s.id"></i>
+                        </div>
+                    }
+                </label>
+                <div class="controls">
+                    @switch ((string)s.type)
+                    {
+                        case "text":
+                        case "textsearch":
+                        case "password":
+                            <input type="@(s.type=="password" ? "password" : "text")" value="@(s.type=="password" ? "password" : s.value)" class="m-wrap large" id="@s.id" name="@s.id" />
+                            if (s.type=="textsearch")
+                            {
+                                <button type="button" class="btn wbtn" id="search@(s.id)"><i class="fa fa-search"></i></button>
+                            }
+                            break;
+                        case "button":
+                            <button type="@s.type" class="btn feedback" id="@s.id">@s.value</button>
+                            if (s.value.ToLower()=="test") 
+                            {
+                                <div id="lffeedback" class="feedback"></div>
+                            }
+                            break;
+                        case "html":
+                            @Html.Raw(s.value);
+                            break;
+                        case "select":
+                            if (!string.IsNullOrWhiteSpace(s.values))
+                            {
+                                string[] vals = s.values.Split(',');
+                                int i = 0;
+                                <select id="@s.id" class="m-wrap large" name="@s.id">
+                                    @foreach(var v in vals)
+                                    {
+                                        <option value="@v" @(s.value==v ? "selected" : "")>@v</option>
+                                        @{i++;}
+                                    }
+                                </select>
+                            }
+                            break;
+                        case "checkbox":
+                        case "radio":
+                            if (!string.IsNullOrWhiteSpace(s.values))
+                            {
+                                string[] vals = s.values.Split(',');
+                                int c = 1;
+                                foreach(var v in vals)
+                                {
+                                    <label class="small-list" for="@(s.id + c.ToString())">@v</label>
+                                    <input type="@s.type" class="m-wrap" @(s.value.Contains(v) ? "checked=\"checked\"":"") value="@Html.Raw(v)" id="@(s.id+c.ToString())" name="@s.id" />
+                                    c++;
+                                }
+                            }
+                            else
+                            {
+                                <input type="@s.type" class="m-wrap" @(s.value=="1" ? "checked=\"checked\"":"") value="@Html.Raw(s.value)" id="@s.id" />
+                            }
+                            break;
+                        case "table":
+                        case "columnlist":
+                        case "tableedit":
+                            <table class="table table-striped table-hover table-data@(s.type)" id="@s.id">
+                            @if (s.table!=null)
+                            {
+                                <thead>
+                                    <tr>
+                                        @foreach (var h in s.table.Columns)
+                                        {
+                                            <th>@h.ColumnName.Replace("_"," ")</th>
+                                        }
+                                        @if (s.type == "tableedit") 
+                                        {
+                                            <th></th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var rw in s.table.Rows)
+                                    {
+                                        <tr>
+                                        @foreach (var h in s.table.Columns)
+                                        {
+                                            <td>@Html.Raw(rw[h].ToString())</td>
+                                        }
+                                        @if (s.type == "tableedit")
+                                        {
+                                            <td>
+                                                <div class="editbuttons">
+                                                    <i class="fa fa-plus"></i>
+                                                    <i class="fa fa-minus"></i>
+                                                    <i class="fa fa-arrows-v"></i>
+                                                    <i class="fa fa-play-circle"></i>
+                                                </div>
+                                            </td>
+                                        }
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                            else
+                            {
+                                <thead>
+                                    <tr><th></th></tr>
+                                </thead
+                                <tbody>
+                                    <tr><td>No Data Available</td></tr>
+                                </tbody>
+                            }
+                            </table>
+                            break;
+                        default:
+                            break;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

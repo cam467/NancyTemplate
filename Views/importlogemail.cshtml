@@ -1,0 +1,56 @@
+@{
+    Layout = "masteremail.cshtml";
+ }
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tbody>
+		<tr>
+			<td style="padding-bottom:20px;">
+				<center>
+					<table border="0" cellpadding="0" cellspacing="0" width="600px" style="height:100%;">
+						<tbody>
+							<tr>
+								<td valign="top" class="bodyContent">
+									<table border="0" cellpadding="20" cellspacing="0" width="100%">
+										<tbody>
+											<tr>
+												<td valign="top">
+													<h2 class="h2">Import Log</h2>
+													<br>
+													<div class="textdark">
+														@Model.Count.ToString() invoice(s) imported at @DateTime.Now.ToString("M/dd/yyyy HH:mm")<br><br>
+														<table>
+															<thead>
+                                                                <tr>
+                                                                @foreach(var n in Model[0].props)
+                                                                {
+                                                                    <th>@n.name</th>
+                                                                }
+                                                                </tr>
+															</thead>
+															<tbody>
+															@foreach(var i in Model)
+															{
+																<tr>
+                                                                    @foreach(var p in i.props)
+                                                                    {
+																	    <td>@p.value</td>
+                                                                    }
+																</tr>
+															}
+															</tbody>
+														</table>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</center>
+			</td>
+		</tr>
+	</tbody>
+</table>

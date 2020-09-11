@@ -1,0 +1,45 @@
+@{Layout = "Views/_layout.cshtml";}
+@section BodyClass {class="page-header-fixed page-sidebar-fixed page-footer-fixeddis"}
+@section pagecss {
+}
+@Html.Partial("views/pageheader")
+<div class="page-container">
+<!-- BEGIN SIDEBAR -->
+<div class="page-sidebar nav-collapse collapse" id="pagesidebarmenu">
+        <!-- BEGIN SIDEBAR MENU -->        
+        <ul class="page-sidebar-menu">
+                <li>
+                        <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+                        <div class="sidebar-toggler hidden-phone"></div>
+                        <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+                </li>
+                @{ string menutitle = "";}
+                @for(int i=0;i<Model.menus.Rows.Count;i++)
+                {
+                        @{ if (Model.menus.Rows[i]["section_id"]==Model.sectionidselected)
+                                {
+                                        menutitle = "<i class='fa " + Model.menus.Rows[i]["section_icon"] + "'></i> " + Model.menus.Rows[i]["section_title"];
+                                        Model.pagetitle = menutitle;
+                                }
+                        }
+                        <li class="@(i==0 ? "start" : i==Model.menus.Rows.Count-1 ? "last" : "") @(Model.menus.Rows[i]["section_id"]==Model.sectionidselected ? "selected" : "") @Model.menucolor" data-section="@Model.menus.Rows[i]["section_id"]" data-title="<i class='fa @Model.menus.Rows[i]["section_icon"]'></i> @Model.menus.Rows[i]["section_title"]">
+                                <a href="">
+                                <i class="fa @Model.menus.Rows[i]["section_icon"]"></i> 
+                                <span class="title">@Model.menus.Rows[i]["section_title"]</span>
+                                </a>
+                        </li>
+                }
+        </ul>
+        <!-- END SIDEBAR MENU -->
+</div>
+<!-- END SIDEBAR -->
+<!-- BEGIN PAGE -->
+<div class="page-content" id="pagecontenthead">
+<!-- BEGIN PAGE CONTAINER-->
+        @Html.Partial("views/configsettings",Model)
+        <!-- END PAGE CONTAINER-->
+</div>
+<!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+@Html.Partial("views/pagefooter")
